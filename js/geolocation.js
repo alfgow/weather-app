@@ -7,9 +7,18 @@ function getCurrentPosition() {
 		throw new Error(
 			"No hay soporte de Geolocalización en tu navegador"
 		);
-	navigator.geolocation.getCurrentPosition((position) => {
-		const lat = position.coords.latitude;
-		const long = position.coords.longitude;
+
+	return new Promise((resolve, reject) => {
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				const lat = position.coords.latitude;
+				const long = position.coords.longitude;
+				resolve({ lat, long });
+			},
+			() => {
+				reject("No hemos podido obtener tu ubicación");
+			}
+		);
 	});
 }
 
