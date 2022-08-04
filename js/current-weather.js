@@ -68,14 +68,13 @@ function solarStatus(sys) {
 	return "morning";
 }
 
-getCurrentPosition()
-	.then((data) => {
-		console.log(data);
-	})
-	.catch((msj) => {
-		console.log(msj);
-	});
-
-export default function currentWeather() {
+export default async function currentWeather() {
+	try {
+		const { lat, long } = await getCurrentPosition();
+		console.log(lat);
+		console.log(long);
+	} catch (error) {
+		return console.log(error);
+	}
 	configCurrentWeather(weather);
 }

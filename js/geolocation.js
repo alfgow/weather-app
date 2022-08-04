@@ -2,7 +2,13 @@ function geolocationSupport() {
 	return "geolocation" in navigator;
 }
 
-function getCurrentPosition() {
+const defaultOptions = {
+	enableHigAccuracy: true,
+	tineout: 5000,
+	maxiumAge: 100000,
+};
+
+function getCurrentPosition(options = defaultOptions) {
 	if (!geolocationSupport())
 		throw new Error(
 			"No hay soporte de Geolocalización en tu navegador"
@@ -17,7 +23,8 @@ function getCurrentPosition() {
 			},
 			() => {
 				reject("No hemos podido obtener tu ubicación");
-			}
+			},
+			options
 		);
 	});
 }
