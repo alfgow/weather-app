@@ -12,6 +12,9 @@ function configCurrentWeather(weather) {
 		sys,
 	} = weather;
 	//! Loader
+	setTimeout(() => {
+		showCurrentWeather();
+	}, 1000);
 	//! date
 	setCurrentDate();
 	//! city
@@ -23,6 +26,13 @@ function configCurrentWeather(weather) {
 }
 
 //? Funciones auxiliares
+function showCurrentWeather() {
+	const $loading = document.querySelector("#loading");
+	const $app = document.querySelector("#app");
+	$loading.hidden = true;
+	$app.hidden = false;
+}
+
 function setCurrentCity(city) {
 	const $currentWeatherCity = document.querySelector(
 		"#current-weather-city"
