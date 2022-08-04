@@ -22,7 +22,9 @@ function getCurrentPosition(options = defaultOptions) {
 				resolve({ lat, long });
 			},
 			() => {
-				reject("No hemos podido obtener tu ubicación");
+				reject(
+					"Es necesario que autorices el acceso a la ubicación del dispositivo"
+				);
 			},
 			options
 		);

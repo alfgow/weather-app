@@ -1,6 +1,6 @@
-import weather from "../data/current-weather.js";
-import { weatherConditionsCodes } from "./constants.js";
+import { API_KEY, BASE_API, weatherConditionsCodes } from "./constants.js";
 import { getCurrentPosition } from "./geolocation.js";
+import { getCurrentWeather } from "./services/weather.js";
 import { formatDate, formatTemp } from "./utils/fomat-data.js";
 
 //? Función principal
@@ -71,10 +71,20 @@ function solarStatus(sys) {
 export default async function currentWeather() {
 	try {
 		const { lat, long } = await getCurrentPosition();
-		console.log(lat);
-		console.log(long);
+		const { error: fetchError, data: weather } =
+			await getCurrentWeather(lat, long, API_KEY, BASE_API);
+		if (fetchError)
+			return Swal.fire({
+				icon: "error",
+				title: "Ups...",
+				text: "Tenemos algun error en el Fetch",
+			});
+		configCurrentWeather(weather);
 	} catch (error) {
-		return console.log(error);
+		return Swal.fire({
+			icon: "warning",
+			title: "Espera...",
+			text: `${error}`,
+		});
 	}
-	configCurrentWeather(weather);
 }
