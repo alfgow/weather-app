@@ -87,7 +87,7 @@ export default async function currentWeather() {
 			return Swal.fire({
 				icon: "error",
 				title: "Ups...",
-				text: "Tenemos algun error en el Fetch",
+				text: "Ha ocurrido un error obteniendo los datos del clima",
 			});
 		configCurrentWeather(weather);
 	} catch (error) {

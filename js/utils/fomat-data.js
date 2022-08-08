@@ -13,4 +13,17 @@ function formatTemp(temp) {
 	return `${temprRound}°`;
 }
 
-export { formatDate, formatTemp };
+function formatWeekList(rawData) {
+	let dayList = [];
+	const weekList = [];
+	rawData.forEach((item, index) => {
+		dayList.push(item);
+		if ((index + 1) % 8 === 0) {
+			weekList.push(dayList);
+			dayList = [];
+		}
+	});
+	return weekList;
+}
+
+export { formatDate, formatTemp, formatWeekList };
