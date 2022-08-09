@@ -27,7 +27,7 @@ function periodTimeTemplate(weather) {
 			new Date(date * 1000),
 			dateOptions
 		)}</span>
-                <img class="dayWeather-icon" src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${description}" rain="">
+                <img class="dayWeather-icon" height="48" width="48" src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${description}" rain="">
                 <span class="dayWeather-temp">${formatTemp(temp)}</span>
               </li>
     `);

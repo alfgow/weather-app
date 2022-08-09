@@ -1,4 +1,5 @@
 import { API_KEY, BASE_API } from "./constants.js";
+import { draggable } from "./draggable.js";
 import { getCurrentPosition } from "./geolocation.js";
 import { periodTimeTemplate } from "./period-time.js";
 import { getWeeklyWeather } from "./services/weather.js";
@@ -35,6 +36,10 @@ function configWeeklyWeather(weeklist) {
 			);
 		});
 	});
+	setTimeout(() => {
+		const $draggable = document.querySelector(".weeklyWeather");
+		draggable($draggable);
+	}, 500);
 }
 
 async function weeklyWeather() {

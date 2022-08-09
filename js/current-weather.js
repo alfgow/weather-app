@@ -14,7 +14,7 @@ function configCurrentWeather(weather) {
 	//! Loader
 	setTimeout(() => {
 		showCurrentWeather();
-	}, 1000);
+	}, 500);
 	//! date
 	setCurrentDate();
 	//! city
