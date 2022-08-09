@@ -8,13 +8,9 @@ function draggable($element, config = defaultConfig) {
 	if (!($element instanceof HTMLElement)) {
 		return console.warn(`Elemento Invalido en Draggable`);
 	}
-	function logger(msj) {
-		if (config.debug) {
-			console.info(msj);
-		}
-	}
 
 	let isOpen = config.open;
+	let isDragging = false;
 	const elementRect = $element.getBoundingClientRect();
 	const ELEMENT_BLOCK_SIZE = elementRect.height;
 	const $marker = $element.querySelector("[data-marker]");
@@ -27,6 +23,46 @@ function draggable($element, config = defaultConfig) {
 	console.log(HIDDEN_Y_POSITION);
 
 	isOpen ? open() : close();
+
+	$marker.addEventListener("click", handleClick);
+	$marker.addEventListener("pointerdown", handlePointerDown);
+	$marker.addEventListener("pointerup", handlePointerUp);
+	$marker.addEventListener("pointerout", handlePointerOut);
+	$marker.addEventListener("pointercancel", handlePointerCancel);
+	$marker.addEventListener("pointermove", handlePointerMove);
+
+	function handleClick(event) {
+		logger("click");
+		toggle();
+	}
+	function handlePointerDown(event) {
+		logger("Pointer Down");
+	}
+	function handlePointerUp(event) {
+		logger("Pointer Up");
+	}
+	function handlePointerOut(event) {
+		logger("Pointer Out");
+	}
+	function handlePointerCancel(event) {
+		logger("Pointer Cancel");
+	}
+	function handlePointerMove(event) {
+		logger("Pointer Move");
+	}
+
+	function toggle() {
+		if (!isDragging) {
+			if (!isOpen) return open();
+			return close();
+		}
+	}
+
+	function logger(msj) {
+		if (config.debug) {
+			console.info(msj);
+		}
+	}
 
 	function open() {
 		logger("Abrir Widget");
