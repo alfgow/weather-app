@@ -11,6 +11,7 @@ function draggable($element, config = defaultConfig) {
 
 	let isOpen = config.open;
 	let isDragging = false;
+	let startY = 0;
 	const elementRect = $element.getBoundingClientRect();
 	const ELEMENT_BLOCK_SIZE = elementRect.height;
 	const $marker = $element.querySelector("[data-marker]");
@@ -37,6 +38,7 @@ function draggable($element, config = defaultConfig) {
 	}
 	function handlePointerDown(event) {
 		logger("Pointer Down");
+		startDrag(event);
 	}
 	function handlePointerUp(event) {
 		logger("Pointer Up");
@@ -49,6 +51,16 @@ function draggable($element, config = defaultConfig) {
 	}
 	function handlePointerMove(event) {
 		logger("Pointer Move");
+		drag(event);
+	}
+
+	function pageY(event) {
+		return event.pageY || event.touches[0].pageY;
+	}
+
+	function startDrag(event) {
+		isDragging = true;
+		startY = pageY(event);
 	}
 
 	function toggle() {
@@ -80,6 +92,14 @@ function draggable($element, config = defaultConfig) {
 
 	function setWidgetPosition(value) {
 		$element.style.marginBottom = `-${value}px`;
+	}
+
+	function drag(event) {
+		const cursorY = pageY(event);
+		const movementY = cursorY - startY;
+		widgetPosition = widgetPosition + movementY;
+		startY = cursorY;
+		setWidgetPosition(widgetPosition);
 	}
 }
 
