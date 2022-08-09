@@ -32,6 +32,8 @@ function draggable($element, config = defaultConfig) {
 	$marker.addEventListener("pointercancel", handlePointerCancel);
 	$marker.addEventListener("pointermove", handlePointerMove);
 
+	if (config.animatable) setAnimations();
+
 	function handleClick(event) {
 		logger("click");
 		toggle();
@@ -42,16 +44,36 @@ function draggable($element, config = defaultConfig) {
 	}
 	function handlePointerUp(event) {
 		logger("Pointer Up");
+		dragEnd();
 	}
 	function handlePointerOut(event) {
 		logger("Pointer Out");
+		dragEnd();
 	}
 	function handlePointerCancel(event) {
 		logger("Pointer Cancel");
+		dragEnd();
 	}
 	function handlePointerMove(event) {
 		logger("Pointer Move");
 		drag(event);
+	}
+
+	function setAnimations() {
+		$element.style.transition = "margin-bottom .3s";
+	}
+
+	function bounce() {
+		if (widgetPosition < ELEMENT_BLOCK_SIZE / 2) {
+			return open();
+		}
+		return close();
+	}
+
+	function dragEnd() {
+		logger("Drag End");
+		isDragging = false;
+		bounce();
 	}
 
 	function pageY(event) {
