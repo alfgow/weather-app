@@ -8,7 +8,7 @@ import { formatWeekList } from "./utils/fomat-data.js";
 
 function tabPanelTemplate(id) {
 	return `
-        <div style='color: white' class="tabPanel" tabindex="0" aria-labelledby="tab-${id}">
+        <div class="tabPanel" tabindex="0" aria-labelledby="tab-${id}">
           <div class="dayWeather" id="dayWeather-${id}">
             <ul class="dayWeather-list" id="dayWeather-list-${id}">
             </ul>
@@ -26,7 +26,7 @@ function createTabPanel(id) {
 }
 
 function configWeeklyWeather(weeklist) {
-	const $container = document.querySelector(".tabs");
+	const $container = document.querySelector("#tabPanelContainer");
 	weeklist.forEach((day, index) => {
 		const $panel = createTabPanel(index);
 		$container.append($panel);
