@@ -1,7 +1,7 @@
-const API_KEY = "abbe448241988abc957e3654e3deac44";
-const BASE_API = "https://api.openweathermap.org/data/2.5/";
+export const BASE_API = "https://api.openweathermap.org/data/2.5/";
+export const API_KEY = "724de8b557185ca9e8fd2050f9b023d2";
 
-const weatherConditionsCodes = {
+export const weatherConditionsCodes = {
 	2: "rainy",
 	3: "drizzle",
 	5: "rainy",
@@ -9,5 +9,3 @@ const weatherConditionsCodes = {
 	7: "cloudy",
 	8: "clean",
 };
-
-export { weatherConditionsCodes, API_KEY, BASE_API };

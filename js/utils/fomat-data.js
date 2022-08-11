@@ -1,29 +1,37 @@
-const optionsDate = {
+const defaultDateOptions = {
 	day: "numeric",
 	weekday: "long",
 	month: "long",
 };
 
-function formatDate(date, options = optionsDate) {
+export function formatDate(date, options = defaultDateOptions) {
 	return new Intl.DateTimeFormat("es", options).format(date);
 }
 
-function formatTemp(temp) {
-	const temprRound = Math.round(temp);
-	return `${temprRound}°`;
+export function formatTemp(value) {
+	return `${Math.floor(value)}°`;
 }
 
-function formatWeekList(rawData) {
+export function formatWind(value) {
+	return `${value} Km-h`;
+}
+
+export function formatHumidity(value) {
+	return `${value}%`;
+}
+
+export function formatWeekList(rawData) {
 	let dayList = [];
 	const weekList = [];
+
 	rawData.forEach((item, index) => {
 		dayList.push(item);
+
 		if ((index + 1) % 8 === 0) {
 			weekList.push(dayList);
 			dayList = [];
 		}
 	});
+
 	return weekList;
 }
-
-export { formatDate, formatTemp, formatWeekList };

@@ -3,32 +3,42 @@ function geolocationSupport() {
 }
 
 const defaultOptions = {
-	enableHigAccuracy: true,
-	tineout: 5000,
-	maxiumAge: 100000,
+	enableHighAccuracy: true,
+	timeout: 5000,
+	maximumAge: 1000000,
 };
 
 function getCurrentPosition(options = defaultOptions) {
 	if (!geolocationSupport())
 		throw new Error(
-			"No hay soporte de Geolocalización en tu navegador"
+			"Tu navegador no tiene soporte para geolocalización"
 		);
 
 	return new Promise((resolve, reject) => {
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
 				const lat = position.coords.latitude;
-				const long = position.coords.longitude;
-				resolve({ lat, long });
+				const lon = position.coords.longitude;
+
+				resolve(position);
 			},
 			() => {
-				reject(
-					"Es necesario que autorices el acceso a la ubicación del dispositivo"
-				);
+				reject("No hemos podido obtener tu ubicación");
 			},
 			options
 		);
 	});
 }
 
-export { getCurrentPosition };
+async function getLatLon(options = defaultOptions) {
+	try {
+		const {
+			coords: { latitude: lat, longitude: lon },
+		} = await getCurrentPosition(options);
+		return { lat, lon, isError: false };
+	} catch {
+		return { isError: true, lat: null, lon: null };
+	}
+}
+
+export { getCurrentPosition, getLatLon };

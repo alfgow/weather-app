@@ -1,6 +1,6 @@
 function setViewportSize($el) {
-	const viewportBlockSize = getViewport();
-	$el.style.blockSize = `${viewportBlockSize}px`;
+	const viewPortBlockSize = getViewport();
+	$el.style.blockSize = `${viewPortBlockSize}px`;
 }
 
 function getViewport() {
@@ -20,4 +20,10 @@ function viewportSize($el) {
 	onViewportResize(() => setViewportSize($el));
 }
 
-export { getViewport, onViewportResize, offViewportResize, viewportSize };
+export {
+	setViewportSize,
+	getViewport,
+	onViewportResize,
+	offViewportResize,
+	viewportSize,
+};

@@ -1,100 +1,95 @@
-import { API_KEY, BASE_API, weatherConditionsCodes } from "./constants.js";
-import { getCurrentPosition } from "./geolocation.js";
+import { weatherConditionsCodes } from "./constants.js";
+import { getLatLon } from "./geolocation.js";
 import { getCurrentWeather } from "./services/weather.js";
 import { formatDate, formatTemp } from "./utils/fomat-data.js";
 
-//? Función principal
-function configCurrentWeather(weather) {
-	const {
-		name: city,
-		main: datos,
-		weather: actualWeather,
-		sys,
-	} = weather;
-	//! Loader
-	setTimeout(() => {
-		showCurrentWeather();
-	}, 500);
-	//! date
-	setCurrentDate();
-	//! city
-	setCurrentCity(city);
-	//! temp
-	setCurrentTemperature(datos);
-	//! background
-	setBackground(actualWeather, solarStatus(sys));
+function setCurrentCity($el, city) {
+	$el.textContent = city;
 }
 
-//? Funciones auxiliares
-function showCurrentWeather() {
-	const $loading = document.querySelector("#loading");
-	const $app = document.querySelector("#app");
-	$loading.hidden = true;
-	$app.hidden = false;
-}
-
-function setCurrentCity(city) {
-	const $currentWeatherCity = document.querySelector(
-		"#current-weather-city"
-	);
-	$currentWeatherCity.textContent = city;
-}
-
-function setCurrentDate() {
-	const $currentWeatherDate = document.querySelector(
-		"#current-weather-date"
-	);
+function setCurrentDate($el) {
 	const date = new Date();
 	const formattedDate = formatDate(date);
-	$currentWeatherDate.textContent = formattedDate;
+	$el.textContent = formattedDate;
 }
 
-function setCurrentTemperature(datos) {
-	const $currentWeatherTemp = document.querySelector(
-		"#current-weather-temp"
-	);
-	const temp = datos.temp;
-	$currentWeatherTemp.textContent = formatTemp(temp);
+function setCurrentTemp($el, temp) {
+	$el.textContent = formatTemp(temp);
 }
 
-function setBackground(actualWeather, solarStatus) {
-	const $app = document.querySelector("#app");
-	const actualId = String(actualWeather[0].id).charAt(0);
-	const actual = weatherConditionsCodes[actualId];
-	const size = window.matchMedia("(-webkit-min-device-pixel-ratio: 2)")
-		.matches
-		? "@2x"
-		: "";
-	$app.style.backgroundImage = `url(./images/${solarStatus}-${actual}${size}.jpg)`;
-}
+function solarStatus(sunsetTime, sunriseTime) {
+	const currentHours = new Date().getHours();
+	const sunsetHours = sunsetTime.getHours();
+	const sunriseHours = sunriseTime.getHours();
 
-function solarStatus(sys) {
-	const sunriseTime = new Date(sys.sunrise * 1000).getHours();
-	const sunsetTime = new Date(sys.sunset * 1000).getHours();
-	const currentHour = new Date().getHours();
-	if (currentHour > sunsetTime || currentHour < sunriseTime) {
+	if (currentHours > sunsetHours || currentHours < sunriseHours) {
 		return "night";
 	}
 	return "morning";
 }
 
-export default async function currentWeather() {
-	try {
-		const { lat, long } = await getCurrentPosition();
-		const { error: fetchError, data: weather } =
-			await getCurrentWeather(lat, long, API_KEY, BASE_API);
-		if (fetchError)
-			return Swal.fire({
-				icon: "error",
-				title: "Ups...",
-				text: "Ha ocurrido un error obteniendo los datos del clima",
-			});
-		configCurrentWeather(weather);
-	} catch (error) {
-		return Swal.fire({
-			icon: "warning",
-			title: "Espera...",
-			text: `${error}`,
-		});
-	}
+function setBackground($el, conditionCode, solarStatus) {
+	const weatherType = weatherConditionsCodes[conditionCode];
+	const size = window.matchMedia("(-webkit-min-device-pixel-ratio: 2)")
+		.matches
+		? "@2x"
+		: "";
+	$el.style.backgroundImage = `url(./images/${solarStatus}-${weatherType}${size}.jpg)`;
 }
+
+function showCurrentWeather($app, $loader) {
+	$app.hidden = false;
+	$loader.hidden = true;
+}
+
+function configCurrentWeather(weather) {
+	const $app = document.querySelector("#app");
+	const $loading = document.querySelector("#loading");
+
+	showCurrentWeather($app, $loading);
+
+	const $currentWeatherDate = document.querySelector(
+		"#current-weather-date"
+	);
+	setCurrentDate($currentWeatherDate);
+
+	const $currentWeatherCity = document.querySelector(
+		"#current-weather-city"
+	);
+	const city = weather.name;
+
+	setCurrentCity($currentWeatherCity, city);
+
+	const $currentWeatherTemp = document.querySelector(
+		"#current-weather-temp"
+	);
+	const temp = weather.main.temp;
+
+	setCurrentTemp($currentWeatherTemp, temp);
+
+	const sunriseTime = new Date(weather.sys.sunrise * 1000);
+	const sunsetTime = new Date(weather.sys.sunset * 1000);
+	const conditionCode = String(weather.weather[0].id).charAt(0);
+
+	setBackground(
+		$app,
+		conditionCode,
+		solarStatus(sunsetTime, sunriseTime)
+	);
+}
+
+async function currentWeather() {
+	const { lat, lon, isError } = await getLatLon();
+	if (isError) return console.log("no obtuvimos tu ubicación");
+	const { isError: currentWeatherError, data: weather } =
+		await getCurrentWeather(lat, lon);
+
+	if (currentWeatherError)
+		return console.log(
+			"A ocurrido un error al traer los datos del clima"
+		);
+
+	configCurrentWeather(weather);
+}
+
+export { currentWeather };

@@ -48,7 +48,18 @@
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: auto auto;
 	gap: 1rem;
+	/* border: 1px solid rgb(204, 255, 0); */
 }
 
 .dayWeather-summary > * {
+	/* border: 1px solid rgb(204, 255, 0); */
+	justify-self: center;
+}
+
+.dayWeather-summary span {
+	font-weight: bold;
+}
+
+.is-hidden {
+	display: none;
 }
